@@ -2588,7 +2588,7 @@ redis_fragment_argx(struct msg *r, uint32_t ncontinuum, struct msg_tqh *frag_msg
         uint32_t idx = msg_backend_idx(r, kpos->start, kpos->end - kpos->start);
 
         if (sub_msgs[idx] == NULL) {
-            sub_msgs[idx] = msg_get(r->owner, r->request, r->redis);
+            sub_msgs[idx] = msg_get(r->owner, r->request, r->proto);
             if (sub_msgs[idx] == NULL) {
                 nc_free(sub_msgs);
                 return NC_ENOMEM;
@@ -2805,7 +2805,7 @@ redis_handle_auth_req(struct msg *req, struct msg *rsp)
     uint32_t keylen;
     bool valid;
 
-    ASSERT(conn->client && !conn->proxy);
+    ASSERT(conn->client && !conn->proxy && conn->proto == PROTO_REDIS);
 
     pool = (struct server_pool *)conn->owner;
 
@@ -2850,7 +2850,7 @@ redis_add_auth(struct context *ctx, struct conn *c_conn, struct conn *s_conn)
 
     pool = c_conn->owner;
 
-    msg = msg_get(c_conn, true, c_conn->redis);
+    msg = msg_get(c_conn, true, c_conn->proto);
     if (msg == NULL) {
         c_conn->err = errno;
         return NC_ENOMEM;
@@ -2871,15 +2871,23 @@ redis_add_auth(struct context *ctx, struct conn *c_conn, struct conn *s_conn)
 }
 
 void
-redis_post_connect(struct context *ctx, struct conn *conn, struct server *server)
+redis_post_connect(struct context *ctx, struct conn *conn)
 {
     rstatus_t status;
-    struct server_pool *pool = server->owner;
+    struct server *server;
+    struct server_pool *pool;
     struct msg *msg;
     int digits;
 
+    if (conn->client) {
+        return;
+    }
+
+    server = conn->owner;
+    pool = server->owner;
+
     ASSERT(!conn->client && conn->connected);
-    ASSERT(conn->redis);
+    ASSERT(conn->proto == PROTO_REDIS);
 
     /*
      * By default, every connection to redis uses the database DB 0. You
@@ -2896,7 +2904,7 @@ redis_post_connect(struct context *ctx, struct conn *conn, struct server *server
      * message to be head of queue as it might already contain a command
      * that triggered the connect.
      */
-    msg = msg_get(conn, true, conn->redis);
+    msg = msg_get(conn, true, conn->proto);
     if (msg == NULL) {
         return;
     }
@@ -2947,4 +2955,22 @@ redis_swallow_msg(struct conn *conn, struct msg *pmsg, struct msg *msg)
                  conn_pool->redis_db, conn_pool->name.data,
                  conn_server->name.data, message);
     }
+}
+
+void
+redis_get_error(struct msg *r, struct msg *msg, const char *errstr)
+{
+    int n;
+    struct mbuf *mbuf;
+
+    mbuf = STAILQ_LAST(&msg->mhdr, mbuf, next);
+
+    ASSERT(mbuf != NULL);
+    ASSERT(msg->mlen == 0);
+
+    n = nc_scnprintf(mbuf->last, mbuf_size(mbuf), "-ERR %s"CRLF, errstr);
+    mbuf->last += n;
+    msg->mlen = (uint32_t)n;
+
+    msg->type = MSG_RSP_REDIS_ERROR;
 }

@@ -1,4 +1,4 @@
-Summary: Twitter's nutcracker redis and memcached proxy
+Summary: Twitter's nutcracker redis, memcached and tarantool proxy
 Name: nutcracker
 Version: 0.4.1
 Release: 1
@@ -15,7 +15,7 @@ BuildRequires: automake
 BuildRequires: libtool
 
 %description
-twemproxy (pronounced "two-em-proxy"), aka nutcracker is a fast and lightweight proxy for memcached and redis protocol.
+twemproxy (pronounced "two-em-proxy"), aka nutcracker is a fast and lightweight proxy for memcached, redis and tarantool protocols.
 It was primarily built to reduce the connection count on the backend caching servers. This, together with protocol
 pipelining and sharding enables you to horizontally scale your distributed caching architecture.
 
