@@ -1,5 +1,5 @@
 Name: twemproxy
-Version: 0.4.1.3rb
+Version: 0.4.1.4rb
 Release: 1%{?dist}
 Summary: Fast and lightweight proxy for memcached and twemproxy protocols
 Group: System Environment/Daemons
