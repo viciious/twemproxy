@@ -29,7 +29,7 @@
 #include <nc_signal.h>
 #include <nc_prng.h>
 
-#define NC_CONF_PATH        "conf/nutcracker.yml"
+#define NC_CONF_PATH        "conf/twemproxy.yml"
 
 #define NC_LOG_DEFAULT      LOG_NOTICE
 #define NC_LOG_MIN          LOG_EMERG
@@ -181,9 +181,9 @@ nc_print_run(struct instance *nci)
 
     status = uname(&name);
     if (status < 0) {
-        loga("nutcracker-%s started on pid %d", NC_VERSION_STRING, nci->pid);
+        loga("twemproxy-%s started on pid %d", NC_VERSION_STRING, nci->pid);
     } else {
-        loga("nutcracker-%s built for %s %s %s started on pid %d",
+        loga("twemproxy-%s built for %s %s %s started on pid %d",
              NC_VERSION_STRING, name.sysname, name.release, name.machine,
              nci->pid);
     }
@@ -203,7 +203,7 @@ static void
 nc_show_usage(void)
 {
     log_stderr(
-        "Usage: nutcracker [-?hVdDt] [-v verbosity level] [-o output file]" CRLF
+        "Usage: twemproxy [-?hVdDt] [-v verbosity level] [-o output file]" CRLF
         "                  [-c conf file] [-s stats port] [-a stats addr]" CRLF
         "                  [-i stats interval] [-p pid file] [-m mbuf size]" CRLF
         "");
@@ -343,7 +343,7 @@ nc_get_options(int argc, char **argv, struct instance *nci)
         case 'v':
             value = nc_atoi(optarg, strlen(optarg));
             if (value < 0) {
-                log_stderr("nutcracker: option -v requires a number");
+                log_stderr("twemproxy: option -v requires a number");
                 return NC_ERROR;
             }
             nci->log_level = value;
@@ -360,11 +360,11 @@ nc_get_options(int argc, char **argv, struct instance *nci)
         case 's':
             value = nc_atoi(optarg, strlen(optarg));
             if (value < 0) {
-                log_stderr("nutcracker: option -s requires a number");
+                log_stderr("twemproxy: option -s requires a number");
                 return NC_ERROR;
             }
             if (!nc_valid_port(value)) {
-                log_stderr("nutcracker: option -s value %d is not a valid "
+                log_stderr("twemproxy: option -s value %d is not a valid "
                            "port", value);
                 return NC_ERROR;
             }
@@ -375,7 +375,7 @@ nc_get_options(int argc, char **argv, struct instance *nci)
         case 'i':
             value = nc_atoi(optarg, strlen(optarg));
             if (value < 0) {
-                log_stderr("nutcracker: option -i requires a number");
+                log_stderr("twemproxy: option -i requires a number");
                 return NC_ERROR;
             }
 
@@ -393,12 +393,12 @@ nc_get_options(int argc, char **argv, struct instance *nci)
         case 'm':
             value = nc_atoi(optarg, strlen(optarg));
             if (value <= 0) {
-                log_stderr("nutcracker: option -m requires a non-zero number");
+                log_stderr("twemproxy: option -m requires a non-zero number");
                 return NC_ERROR;
             }
 
             if (value < NC_MBUF_MIN_SIZE || value > NC_MBUF_MAX_SIZE) {
-                log_stderr("nutcracker: mbuf chunk size must be between %zu and"
+                log_stderr("twemproxy: mbuf chunk size must be between %zu and"
                            " %zu bytes", NC_MBUF_MIN_SIZE, NC_MBUF_MAX_SIZE);
                 return NC_ERROR;
             }
@@ -411,7 +411,7 @@ nc_get_options(int argc, char **argv, struct instance *nci)
             case 'o':
             case 'c':
             case 'p':
-                log_stderr("nutcracker: option -%c requires a file name",
+                log_stderr("twemproxy: option -%c requires a file name",
                            optopt);
                 break;
 
@@ -419,21 +419,21 @@ nc_get_options(int argc, char **argv, struct instance *nci)
             case 'v':
             case 's':
             case 'i':
-                log_stderr("nutcracker: option -%c requires a number", optopt);
+                log_stderr("twemproxy: option -%c requires a number", optopt);
                 break;
 
             case 'a':
-                log_stderr("nutcracker: option -%c requires a string", optopt);
+                log_stderr("twemproxy: option -%c requires a string", optopt);
                 break;
 
             default:
-                log_stderr("nutcracker: invalid option -- '%c'", optopt);
+                log_stderr("twemproxy: invalid option -- '%c'", optopt);
                 break;
             }
             return NC_ERROR;
 
         default:
-            log_stderr("nutcracker: invalid option -- '%c'", optopt);
+            log_stderr("twemproxy: invalid option -- '%c'", optopt);
             return NC_ERROR;
 
         }
@@ -453,14 +453,14 @@ nc_test_conf(struct instance *nci)
 
     cf = conf_create(nci->conf_filename);
     if (cf == NULL) {
-        log_stderr("nutcracker: configuration file '%s' syntax is invalid",
+        log_stderr("twemproxy: configuration file '%s' syntax is invalid",
                    nci->conf_filename);
         return false;
     }
 
     conf_destroy(cf);
 
-    log_stderr("nutcracker: configuration file '%s' syntax is ok",
+    log_stderr("twemproxy: configuration file '%s' syntax is ok",
                nci->conf_filename);
     return true;
 }
@@ -556,7 +556,7 @@ main(int argc, char **argv)
     }
 
     if (show_version) {
-        log_stderr("This is nutcracker-%s" CRLF, NC_VERSION_STRING);
+        log_stderr("This is twemproxy-%s" CRLF, NC_VERSION_STRING);
         if (show_help) {
             nc_show_usage();
         }

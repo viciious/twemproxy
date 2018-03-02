@@ -31,9 +31,9 @@ endif
 
 SUBDIRS = hashkit proto event
 
-sbin_PROGRAMS = nutcracker
+sbin_PROGRAMS = twemproxy
 
-nutcracker_SOURCES =			\
+twemproxy_SOURCES =			\
 	nc_core.c nc_core.h		\
 	nc_connection.c nc_connection.h	\
 	nc_client.c nc_client.h		\
@@ -55,7 +55,7 @@ nutcracker_SOURCES =			\
 	nc_prng.c nc_prng.h             \
 	nc.c
 
-nutcracker_LDADD = $(top_builddir)/src/hashkit/libhashkit.a
-nutcracker_LDADD += $(top_builddir)/src/proto/libproto.a
-nutcracker_LDADD += $(top_builddir)/src/event/libevent.a
-nutcracker_LDADD += $(top_builddir)/contrib/yaml-0.1.4/src/.libs/libyaml.a
+twemproxy_LDADD = $(top_builddir)/src/hashkit/libhashkit.a
+twemproxy_LDADD += $(top_builddir)/src/proto/libproto.a
+twemproxy_LDADD += $(top_builddir)/src/event/libevent.a
+twemproxy_LDADD += $(top_builddir)/contrib/yaml-0.1.4/src/.libs/libyaml.a
