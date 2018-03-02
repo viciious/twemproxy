@@ -21,6 +21,8 @@ This, together with protocol pipelining and sharding enables you to
 horizontally scale your distributed caching architecture.
 
 
+%define __logdir /var/log
+
 %prep
 %setup -q
 
@@ -33,8 +35,9 @@ make %{?_smp_mflags}
 %install
 %make_install
 mkdir -p %{buildroot}%{_sysconfdir}/sysconfig
-echo "#OPTIONS=" > %{buildroot}%{_sysconfdir}/sysconfig/twemproxy
+echo "OPTIONS=-o /var/log/twemproxy/twemproxy.log" > %{buildroot}%{_sysconfdir}/sysconfig/twemproxy
 touch %{buildroot}%{_sysconfdir}/twemproxy.yml
+mkdir -p %{buildroot}%{__logdir}/twemproxy
 install -p -D -m 0644 scripts/twemproxy.service %{buildroot}%{_unitdir}/twemproxy.service
 
 
@@ -61,6 +64,7 @@ exit 0
 %doc ChangeLog NOTICE README.md notes/
 %ghost %config %{_sysconfdir}/twemproxy.yml
 %config(noreplace) %{_sysconfdir}/sysconfig/twemproxy
+%dir %attr(0755, twemproxy, twemproxy) %{__logdir}/twemproxy
 %{_sbindir}/twemproxy
 %{_mandir}/man8/twemproxy.8*
 %{_unitdir}/twemproxy.service
