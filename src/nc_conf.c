@@ -309,7 +309,7 @@ conf_pool_each_transform(void *elem, void *data)
     sp->redis_db = cp->redis_db;
 
     sp->redis_auth = cp->redis_auth;
-    sp->require_auth = cp->redis_auth.len > 0 ? 1 : 0;
+    sp->require_auth = (cp->proto == PROTO_REDIS && cp->redis_auth.len > 0) ? 1 : 0;
 
     sp->client_connections = (uint32_t)cp->client_connections;
     sp->server_connections = (uint32_t)cp->server_connections;

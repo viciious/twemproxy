@@ -164,20 +164,6 @@ _conn_get(void)
     return conn;
 }
 
-<<<<<<< HEAD
-=======
-static bool
-conn_need_auth(void *owner, proto_type_t proto) {
-    struct server_pool *pool = (struct server_pool *)(owner);
-
-    if (proto == PROTO_REDIS && pool->redis_auth.len > 0) {
-        return true;
-    }
-
-    return false;
-}
-
->>>>>>> Implement Tarantool support.
 struct conn *
 conn_get(void *owner, bool client, proto_type_t proto)
 {
@@ -227,10 +213,6 @@ conn_get(void *owner, bool client, proto_type_t proto)
 
         conn->ref = client_ref;
         conn->unref = client_unref;
-<<<<<<< HEAD
-=======
-        conn->need_auth = conn_need_auth(owner, proto);
->>>>>>> Implement Tarantool support.
 
         conn->enqueue_inq = NULL;
         conn->dequeue_inq = NULL;
@@ -258,11 +240,6 @@ conn_get(void *owner, bool client, proto_type_t proto)
         conn->ref = server_ref;
         conn->unref = server_unref;
 
-<<<<<<< HEAD
-=======
-        conn->need_auth = conn_need_auth(server->owner, proto);
-
->>>>>>> Implement Tarantool support.
         conn->enqueue_inq = req_server_enqueue_imsgq;
         conn->dequeue_inq = req_server_dequeue_imsgq;
         conn->enqueue_outq = req_server_enqueue_omsgq;
