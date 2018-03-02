@@ -206,5 +206,6 @@ void tarantool_get_error(struct msg *r, struct msg *msg, const char *errstr);
 void tarantool_post_connect(struct context *ctx, struct conn *conn);
 void tarantool_swallow_msg(struct conn *conn, struct msg *pmsg,
                            struct msg *msg);
+bool tarantool_failure(struct msg *r);
 
 #endif

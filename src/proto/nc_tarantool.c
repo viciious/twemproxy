@@ -810,7 +810,7 @@ tarantool_get_greeting(struct msg *msg)
 
     n = nc_scnprintf(mbuf->last, IPROTO_GREETING_SIZE + 1,
                      "Tarantool %-20s %-32s\n%-63s\n",
-                     "1.6.0", "("PACKAGE_STRING")", base64buf);
+                     "1.6.0", "(Binary) ("PACKAGE_STRING")", base64buf);
 
     mbuf->last += n;
     msg->mlen += (uint32_t)n;
@@ -1040,4 +1040,9 @@ rstatus_t tarantool_add_auth_packet(struct context *ctx, struct conn *c_conn,
 void tarantool_swallow_msg(struct conn *conn, struct msg *pmsg,
                            struct msg *msg)
 {
+}
+
+bool tarantool_failure(struct msg *r)
+{
+    return false;
 }

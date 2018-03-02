@@ -333,6 +333,7 @@ msg_get(struct conn *conn, bool request, proto_type_t proto)
         msg->add_auth = tarantool_add_auth_packet;
         msg->fragment = tarantool_fragment;
         msg->reply = tarantool_reply;
+        msg->failure = tarantool_failure;
         msg->pre_coalesce = tarantool_pre_coalesce;
         msg->post_coalesce = tarantool_post_coalesce;
         msg->get_error = tarantool_get_error;
