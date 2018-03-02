@@ -29,7 +29,7 @@
 #include <nc_signal.h>
 #include <nc_prng.h>
 
-#define NC_CONF_PATH        "conf/twemproxy.yml"
+#define NC_CONF_PATH        "/etc/twemproxy.yml"
 
 #define NC_LOG_DEFAULT      LOG_NOTICE
 #define NC_LOG_MIN          LOG_EMERG
