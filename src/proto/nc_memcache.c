@@ -1447,8 +1447,11 @@ memcache_copy_bulk(struct msg *dst, struct msg *src)
      */
     ASSERT(*p == 'V');
     for (i = 0; i < 3; i++) {                 /*  eat 'VALUE key 0 '  */
-        for (; *p != ' ';) {
+        for (; p < mbuf->last && *p != ' ';) {
             p++;
+        }
+        if (p == mbuf->last) {
+            break;
         }
         p++;
     }
